@@ -2,13 +2,59 @@ const products = require('../../src/data/products');
 const { sortProductsByPrice } = require('../../src/catalog');
 
 describe('sortProductsByPrice', () => {
-  test.todo("все товары c 'asc' сортируются как [3, 6, 5, 4, 2, 1]");
-  test.todo('все товары без направления сортируются как [3, 6, 5, 4, 2, 1]');
-  test.todo("товары [1, 3, 4] c 'asc' сортируются как [3, 4, 1]");
-  test.todo("все товары c 'desc' сортируются как [1, 2, 4, 5, 6, 3]");
-  test.todo("товары [3, 1, 4] c 'desc' сортируются как [1, 4, 3]");
-  test.todo("товары [5, 2, 6] c 'desc' сортируются как [2, 5, 6]");
-  test.todo("'asc' не меняет исходный массив [1, 3, 4]");
-  test.todo("'desc' не меняет исходный массив [1, 3, 4]");
-  test.todo('направление по умолчанию не меняет исходный массив всех товаров');
+    test("sorts all products ascending with 'asc'", () => {
+        expect(
+            sortProductsByPrice(products, 'asc').map(({ id }) => id),
+        ).toEqual([3, 6, 5, 4, 2, 1]);
+    });
+
+    test('sorts all products ascending by default', () => {
+        expect(sortProductsByPrice(products).map(({ id }) => id)).toEqual([
+            3, 6, 5, 4, 2, 1,
+        ]);
+    });
+
+    test('sorts products [1, 3, 4] ascending', () => {
+        const subset = products.filter(({ id }) => [1, 3, 4].includes(id));
+        expect(sortProductsByPrice(subset, 'asc').map(({ id }) => id)).toEqual([
+            3, 4, 1,
+        ]);
+    });
+
+    test("sorts all products descending with 'desc'", () => {
+        expect(
+            sortProductsByPrice(products, 'desc').map(({ id }) => id),
+        ).toEqual([1, 2, 4, 5, 6, 3]);
+    });
+
+    test('sorts products [3, 1, 4] descending', () => {
+        const subset = products.filter(({ id }) => [3, 1, 4].includes(id));
+        expect(sortProductsByPrice(subset, 'desc').map(({ id }) => id)).toEqual(
+            [1, 4, 3],
+        );
+    });
+
+    test('sorts products [5, 2, 6] descending', () => {
+        const subset = products.filter(({ id }) => [5, 2, 6].includes(id));
+        expect(sortProductsByPrice(subset, 'desc').map(({ id }) => id)).toEqual(
+            [2, 5, 6],
+        );
+    });
+
+    test('ascending sort does not mutate the original subset', () => {
+        const subset = products.filter(({ id }) => [1, 3, 4].includes(id));
+        sortProductsByPrice(subset, 'asc');
+        expect(subset.map(({ id }) => id)).toEqual([1, 3, 4]);
+    });
+
+    test('descending sort does not mutate the original subset', () => {
+        const subset = products.filter(({ id }) => [1, 3, 4].includes(id));
+        sortProductsByPrice(subset, 'desc');
+        expect(subset.map(({ id }) => id)).toEqual([1, 3, 4]);
+    });
+
+    test('default sort direction does not mutate the original products array', () => {
+        sortProductsByPrice(products);
+        expect(products.map(({ id }) => id)).toEqual([1, 2, 3, 4, 5, 6]);
+    });
 });
