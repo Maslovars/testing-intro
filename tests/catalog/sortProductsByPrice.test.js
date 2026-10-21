@@ -28,14 +28,18 @@ describe('sortProductsByPrice', () => {
     });
 
     test('sorts products [3, 1, 4] descending', () => {
-        const subset = products.filter(({ id }) => [3, 1, 4].includes(id));
+        const subset = [3, 1, 4].map((id) =>
+            products.find((product) => product.id === id),
+        );
         expect(sortProductsByPrice(subset, 'desc').map(({ id }) => id)).toEqual(
             [1, 4, 3],
         );
     });
 
     test('sorts products [5, 2, 6] descending', () => {
-        const subset = products.filter(({ id }) => [5, 2, 6].includes(id));
+        const subset = [5, 2, 6].map((id) =>
+            products.find((product) => product.id === id),
+        );
         expect(sortProductsByPrice(subset, 'desc').map(({ id }) => id)).toEqual(
             [2, 5, 6],
         );
